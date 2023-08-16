@@ -1,18 +1,14 @@
-FROM mhart/alpine-node:6.3
-ENV NODE_ENV "production"
-ENV PORT 8079
-EXPOSE 8079
-RUN addgroup mygroup && adduser -D -G mygroup myuser && mkdir -p /usr/src/app && chown -R myuser /usr/src/app
-RUN npm install -g yarn
-USER myuser
+FROM node:0.10.46
 
-# Prepare app directory
+RUN apt-get install -y make
+
+RUN npm install -g phantomjs-prebuilt
+RUN npm install -g casperjs
+
+RUN mkdir -p /usr/src/app
+
 WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-COPY yarn.lock /usr/src/app/
-RUN yarn install
 
-COPY . /usr/src/app
+EXPOSE 22
 
-# Start the app
-CMD ["npm", "start"]
+ENTRYPOINT ["/bin/bash"]
